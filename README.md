@@ -369,9 +369,11 @@ Alert      Alert
 The server maintains recent failed-login events in memory.
 
 The current configuration is:
-
+```text
 BRUTE_FORCE_THRESHOLD = 3
 BRUTE_FORCE_WINDOW = 60
+```
++88++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 This means the system checks whether the same username has generated at least 3 failed login attempts within 60 seconds.
 
@@ -416,17 +418,21 @@ They do not intentionally disable the firewall, create unauthorized accounts, mo
 A simple demonstration can follow this sequence:
 
 Step 1 — Start the Flask Server
+```text
 python server/app.py
+```
 Step 2 — Open the Dashboard
 
 Open:
-
+```text
 http://127.0.0.1:5000
+```
 Step 3 — Start the Windows Agent
 
 Run the agent as Administrator:
-
+```text
 python agent/agent.py
+```
 Step 4 — Generate Failed Login Activity
 
 Trigger controlled failed login attempts on the test machine.
@@ -454,16 +460,18 @@ The dashboard displays the detected security activity.
 A separate test file is included to verify that Windows desktop notifications are working correctly.
 
 Run:
-
+```text
 python test_notification.py
+```
 
 Expected output:
-
+```text
 ✅ Desktop notification sent successfully!
-
+```
 If winotify is not installed:
-
+```text
 pip install winotify
+```
 🧩 API Endpoints
 
 The Flask backend provides several API endpoints for communication between the agent, dashboard, and detection system.
@@ -529,10 +537,11 @@ Possible future improvements include:
  Production-grade logging and monitoring
 
 Potential future Event IDs to monitor include:
-
+```text
 4720  → User account created
 4719  → System audit policy changed
 4732  → Member added to a security-enabled local group
+```
 🎓 Learning Outcomes
 
 This project provided practical exposure to:
