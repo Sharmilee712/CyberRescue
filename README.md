@@ -289,14 +289,14 @@ The agent polls the Windows Security Event Log periodically and sends detected E
 Telegram alerts require a Telegram bot and chat configuration.
 
 Open:
-
+```text
 server/app.py
-
+```
 Locate:
-
+```text
 TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
 TELEGRAM_CHAT_ID   = "YOUR_CHAT_ID_HERE"
-
+```
 Replace the placeholders with your Telegram bot token and chat ID.
 
 ⚠️ Security Warning
@@ -308,20 +308,22 @@ For a production implementation, sensitive configuration should be stored using 
 🔎 Event ID 4625 Detection
 
 CyberRescue currently focuses on Windows:
-
+```text
 Event ID: 4625
 Description: An account failed to log on
+```
 
 The agent reads Windows Security Events and filters for Event ID 4625.
 
 Relevant information is extracted from the event data, including:
-
+```text
 Username
 Domain
 Source IP
 Timestamp
 Event ID
 Record Number
+```
 
 The extracted event is then sent to the Flask server.
 
@@ -479,17 +481,18 @@ The Flask backend provides several API endpoints for communication between the a
 Important endpoints include:
 
 Endpoint	Purpose
-/api/logs	Receives security events from the agent
-/api/dashboard	Provides dashboard statistics
-/api/clear	Clears in-memory monitoring data
-/api/simulate/brute_force	Simulates brute-force activity
-/api/simulate/firewall_disabled	Simulates firewall-related activity
-/api/simulate/suspicious_process	Simulates suspicious process activity
-/api/simulate/user_creation	Simulates user creation activity
-/api/simulate/policy_tamper	Simulates policy tampering
-/api/simulate/powershell	Simulates PowerShell activity
-/api/simulate/usb_insert	Simulates USB insertion
-/api/simulate/privilege_escalation	Simulates privilege escalation
+```text/api/logs```	Receives security events from the agent
+```text/api/dashboard```	Provides dashboard statistics
+```text/api/clear```	Clears in-memory monitoring data
+```text/api/simulate/brute_force```	Simulates brute-force activity
+```text/api/simulate/firewall_disabled```	Simulates firewall-related activity
+```text/api/simulate/suspicious_process```	Simulates suspicious process activity
+```text/api/simulate/user_creation```	Simulates user creation activity
+```text/api/simulate/policy_tamper```	Simulates policy tampering
+```text/api/simulate/powershell```	Simulates PowerShell activity
+```text/api/simulate/usb_insert```	Simulates USB insertion
+```text/api/simulate/privilege_escalation```	Simulates privilege escalation
+
 🛡️ Security Considerations
 
 CyberRescue is an academic security monitoring project.
@@ -600,9 +603,10 @@ Repeated failed logins can be an indicator of password guessing or brute-force a
 The server counts failed login events for the same username within a configured time window.
 
 The current configuration triggers detection when:
-
+```text
 3 or more failed login attempts
 within 60 seconds
+```
 4. Why is the agent required?
 
 The agent runs on the Windows endpoint and reads the local Windows Security Event Log.
