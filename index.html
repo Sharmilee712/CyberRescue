@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HIDS — Security Operations Console</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TOP HEADER BAR
+═══════════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">HIDS <em>Security Console</em></span>
+    </div>
+  </div>
+  <div class="topbar-center">
+    <span class="badge-status" id="systemStatus">● SYSTEM ONLINE</span>
+  </div>
+  <div class="topbar-right">
+    <span class="label">THREAT LEVEL</span>
+    <span class="threat-badge" id="threatBadge">NORMAL</span>
+    <span class="timestamp" id="lastUpdated">—</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     KPI STAT CARDS
+═══════════════════════════════════════════════════════════════ -->
+<main class="layout">
+
+  <section class="stat-cards">
+    <div class="card stat-card" id="cardLogs">
+      <div class="card-icon">📋</div>
+      <div class="card-body">
+        <div class="card-value" id="totalLogs">0</div>
+        <div class="card-label">Total Logs</div>
+      </div>
+      <div class="card-glow"></div>
+    </div>
+
+    <div class="card stat-card" id="cardAlerts">
+      <div class="card-icon">🚨</div>
+      <div class="card-body">
+        <div class="card-value" id="totalAlerts">0</div>
+        <div class="card-label">Total Alerts</div>
+      </div>
+      <div class="card-glow"></div>
+    </div>
+
+    <div class="card stat-card sev-critical">
+      <div class="card-icon">🔴</div>
+      <div class="card-body">
+        <div class="card-value" id="sevCritical">0</div>
+        <div class="card-label">Critical</div>
+      </div>
+    </div>
+
+    <div class="card stat-card sev-high">
+      <div class="card-icon">🟠</div>
+      <div class="card-body">
+        <div class="card-value" id="sevHigh">0</div>
+        <div class="card-label">High</div>
+      </div>
+    </div>
+
+    <div class="card stat-card sev-medium">
+      <div class="card-icon">🟡</div>
+      <div class="card-body">
+        <div class="card-value" id="sevMedium">0</div>
+        <div class="card-label">Medium</div>
+      </div>
+    </div>
+
+    <div class="card stat-card sev-low">
+      <div class="card-icon">🟢</div>
+      <div class="card-body">
+        <div class="card-value" id="sevLow">0</div>
+        <div class="card-label">Low</div>
+      </div>
+    </div>
+  </section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN GRID — charts + feed + table
+═══════════════════════════════════════════════════════════════ -->
+  <div class="main-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="left-col">
+
+      <!-- Alert-type doughnut chart -->
+      <div class="card panel">
+        <div class="panel-header">
+          <span class="panel-title">Attack Type Distribution</span>
+          <span class="panel-dot"></span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="typeChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Severity bar chart -->
+      <div class="card panel">
+        <div class="panel-header">
+          <span class="panel-title">Severity Breakdown</span>
+          <span class="panel-dot"></span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="sevChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CENTER COLUMN -->
+    <div class="center-col">
+
+      <!-- Live attack feed / timeline -->
+      <div class="card panel feed-panel">
+        <div class="panel-header">
+          <span class="panel-title">⚡ Live Attack Feed</span>
+          <span class="feed-count" id="feedCount">0 events</span>
+        </div>
+        <ul class="feed-list" id="feedList">
+          <li class="feed-empty">Waiting for events…</li>
+        </ul>
+      </div>
+
+      <!-- Alerts table -->
+      <div class="card panel table-panel">
+        <div class="panel-header">
+          <span class="panel-title">🔔 Alert Log</span>
+        </div>
+        <div class="table-scroll">
+          <table class="alerts-table" id="alertsTable">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Severity</th>
+                <th>User</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody id="alertsBody">
+              <tr><td colspan="5" class="empty-row">No alerts yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN — demo simulator -->
+    <div class="right-col">
+
+      <div class="card panel sim-panel">
+        <div class="panel-header">
+          <span class="panel-title">🎮 Demo Simulator</span>
+        </div>
+        <p class="sim-hint">Trigger safe intrusion scenarios for faculty demonstration.</p>
+
+        <button class="sim-btn critical" onclick="simulate('brute_force')">
+          <span class="btn-icon">🔑</span> Brute Force Attack
+        </button>
+        <button class="sim-btn critical" onclick="simulate('privilege_escalation')">
+          <span class="btn-icon">👑</span> Privilege Escalation
+        </button>
+        <button class="sim-btn critical" onclick="simulate('firewall_disabled')">
+          <span class="btn-icon">🛡️</span> Firewall Disabled
+        </button>
+        <button class="sim-btn high" onclick="simulate('suspicious_process')">
+          <span class="btn-icon">⚙️</span> Suspicious Process
+        </button>
+        <button class="sim-btn high" onclick="simulate('user_creation')">
+          <span class="btn-icon">👤</span> Unauthorized User Creation
+        </button>
+        <button class="sim-btn high" onclick="simulate('policy_tamper')">
+          <span class="btn-icon">📜</span> Security Policy Tamper
+        </button>
+        <button class="sim-btn high" onclick="simulate('powershell')">
+          <span class="btn-icon">💻</span> Suspicious PowerShell
+        </button>
+        <button class="sim-btn medium" onclick="simulate('usb_insert')">
+          <span class="btn-icon">🔌</span> USB Device Inserted
+        </button>
+
+        <hr class="sim-divider" />
+
+        <button class="sim-btn reset" onclick="clearAll()">
+          <span class="btn-icon">🗑️</span> Clear All Data
+        </button>
+
+        <div id="simStatus" class="sim-status"></div>
+      </div>
+
+      <!-- System Overview -->
+      <div class="card panel overview-panel">
+        <div class="panel-header">
+          <span class="panel-title">🖥 System Overview</span>
+        </div>
+        <ul class="overview-list">
+          <li><span>Agent</span><span class="ov-val online">● Online</span></li>
+          <li><span>Event Log Reader</span><span class="ov-val online">● Active</span></li>
+          <li><span>Detection Engine</span><span class="ov-val online">● Running</span></li>
+          <li><span>Telegram Alerts</span><span class="ov-val" id="ovTelegram">● Configured</span></li>
+          <li><span>Desktop Popups</span><span class="ov-val online">● Enabled</span></li>
+          <li><span>Monitoring</span><span class="ov-val">Event ID 4625</span></li>
+          <li><span>Brute Force Threshold</span><span class="ov-val">3 in 60s</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div><!-- /main-grid -->
+
+</main><!-- /layout -->
+
+<script src="/static/script.js"></script>
+</body>
+</html>

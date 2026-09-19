@@ -1,0 +1,8 @@
+# Server dependencies
+flask>=2.3
+flask-cors>=4.0
+requests>=2.31
+
+# Windows agent dependencies (Windows only)
+pywin32>=306
+winotify>=1.1
